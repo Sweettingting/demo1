@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./assets/news.css" />
+    <script src="./lib/jquery.js"></script>
+    <script src="./lib/template-web.js"></script>
+  </head>
+
+  <body>
+    <div id="news-list">
+      <!-- <div class="news-item">
+        <img
+          class="thumb"
+          src="http://www.liulongbin.top:3006/images/0.webp"
+          alt=""
+        />
+        <div class="right-box">
+          <h1 class="title">5G商用在即，三大运营商营收持续下降</h1>
+          <div class="tags">
+            <span>三大运营商</span>
+            <span>中国移动</span>
+            <span>5G商用</span>
+          </div>
+          <div class="footer">
+            <div>
+              <span>新京报经济新闻</span>&nbsp;&nbsp;
+              <span>2019-10-28 11:50:28</span>
+            </div>
+            <span>评论数：58</span>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <script type="text/html" id="tpl">
+      {{each data v}}
+      <div class="news-item">
+        <img
+          class="thumb"
+          src="http://www.liulongbin.top:3006{{v.img}}"
+          alt=""
+        />
+        <div class="right-box">
+          <h1 class="title">{{v.title}}</h1>
+          <div class="tags">
+            {{each v.tags.split(",")}}
+            <span>{{$value}}</span>
+            {{/each}}
+          </div>
+          <div class="footer">
+            <div>
+              <span>{{v.source}}</span>&nbsp;&nbsp;
+              <span>{{v.time | formatTime}}</span>
+            </div>
+            <span>评论数：{{v.cmtcount}}</span>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </script>
+    <script>
+      $(function () {
+        let padZero = (n) => (n < 10 ? "0" + n : n);
+        template.defaults.imports.formatTime = function (time) {
+          console.log(time);
+          let d = new Date(time);
+          let y = d.getFullYear();
+          let m = d.getMonth();
+          let day = d.getDate();
+          let h = d.getHours();
+          let minute = d.getMinutes();
+          let s = d.getSeconds();
+          return `${y}/${m}/${day} ${h}:${minute}:${s}`;
+        };
+        $.ajax({
+          url: "http://www.liulongbin.top:3006/api/news",
+          success: function (res) {
+            console.log(res);
+            for (let i = 0; i < res.data.length; i++) {
+              //console.log(res.data[i]);
+            }
+            let htmlStr = template("tpl", res);
+            //console.log(htmlStr);
+            document.querySelector("#news-list").innerHTML = htmlStr;
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
